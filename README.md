@@ -17,3 +17,5 @@ To run the application, you can use the following command:
 ```bash
 python -m APIArtisan.main
 ```
+
+![image](https://github.com/ANIALLATOR114/API-Artisan/assets/116189545/8e045d3a-7e83-46be-b354-e73a544d736b)
