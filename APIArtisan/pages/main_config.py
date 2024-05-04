@@ -1,3 +1,5 @@
+import json
+
 from functools import partial
 from nicegui import ui
 
@@ -129,30 +131,41 @@ def generate_main_config_page(config: Config, main_body: ui.card):
                 with ui.card_section():
                     ui.label("Endpoint URL")
                     ui.input(
-                        placeholder="https://api.example.com",
+                        value=config.http_config.url,
+                        on_change=lambda value: config.http_config.set_url(value.value),
                     )
                 with ui.card_section():
                     ui.label("HTTP Method")
-                    ui.select(["GET", "POST", "PUT", "DELETE", "PATCH"], value="GET")
+                    ui.select(
+                        ["GET", "POST", "PUT", "DELETE", "PATCH"], 
+                        value=config.http_config.method.value,
+                        on_change=lambda value: config.http_config.set_method(value.value),
+                    )
 
             with ui.card_section():
                 ui.label("Headers")
                 ui.json_editor(
                     {
-                        "content": {"json": {"example-header": "APIArtisan"}},
+                        "content": {"json": config.http_config.headers},
                         "mode": "text",
                         "mainMenuBar": False,
-                    }
+                    },
+                    on_change=lambda value: config.http_config.set_headers(
+                        json.loads(value.content["text"])
+                    ),
                 )
 
             with ui.card_section():
                 ui.label("Body")
                 ui.json_editor(
                     {
-                        "content": {"json": {"example-body-value": "APIArtisan"}},
+                        "content": {"json": config.http_config.body},
                         "mode": "text",
                         "mainMenuBar": False,
-                    }
+                    },
+                    on_change=lambda value: config.http_config.set_body(
+                        json.loads(value.content["text"])
+                    ),
                 )
 
         ui.separator()

@@ -1,7 +1,11 @@
+from enum import Enum
+import json
 from nicegui import ui
 from ..utils import storage
 
 from .auth_type import AuthType
+from .http_config import HTTPConfig
+from ..utils.storage import INDENTATION
 
 
 class Config:
@@ -11,15 +15,23 @@ class Config:
         auth_enabled: bool = False,
         auth_type: AuthType = AuthType.NONE,
         auth_details: dict = {},
+        http_config = HTTPConfig(),
     ) -> None:
         self.name = name
         self.auth_enabled = auth_enabled
         self.auth_type = auth_type
         self.auth_details = auth_details
+        self.http_config = http_config
 
+    def toJson(self):
+        return json.dumps(
+            self, indent=INDENTATION, default=lambda o: str(o) if isinstance(o, Enum) else o.__dict__
+        )
+    
     async def save(self):
         try:
-            await storage.configs.write_to_file(self)
+            json = self.toJson()
+            await storage.configs.write_to_file(json, self.name)
         except FileExistsError:
             ui.notify(f"A config with this name {self.name} already exists!", type="negative")
             return
@@ -30,7 +42,8 @@ class Config:
 
     async def update(self):
         try:
-            await storage.configs.update_file(self)
+            json = self.toJson()
+            await storage.configs.update_file(json, self.name)
         except FileNotFoundError:
             ui.notify(f"Config {self.name} does not exist!", type="negative")
             return
@@ -43,6 +56,7 @@ class Config:
     def from_dict(cls, data: dict) -> "Config":
         data = data.copy()
         data["auth_type"] = AuthType(data.get("auth_type", AuthType.NONE))
+        data["http_config"] = HTTPConfig.from_dict(data.get("http_config", {}))
         return cls(**data)
 
     async def delete(self):
