@@ -12,7 +12,7 @@ class Secret:
         self.value = value
         self.available = available
 
-    def toJson(self):
+    def to_json(self):
         return json.dumps(
             self,
             indent=storage.INDENTATION,
@@ -22,7 +22,7 @@ class Secret:
     async def set_availability(self, switch: ui.switch):
         self.available = switch.value
 
-        json = self.toJson()
+        json = self.to_json()
         try:
             await storage.secrets.update_file(json, self.name)
         except FileNotFoundError:
@@ -38,7 +38,7 @@ class Secret:
         return cls(**data)
 
     async def save(self):
-        json = self.toJson()
+        json = self.to_json()
         try:
             await storage.secrets.write_to_file(json, self.name)
         except FileExistsError:

@@ -15,7 +15,7 @@ class Config:
         auth_enabled: bool = False,
         auth_type: AuthType = AuthType.NONE,
         auth_details: dict = {},
-        http_config = HTTPConfig(),
+        http_config: HTTPConfig = HTTPConfig(),
     ) -> None:
         self.name = name
         self.auth_enabled = auth_enabled
@@ -23,14 +23,14 @@ class Config:
         self.auth_details = auth_details
         self.http_config = http_config
 
-    def toJson(self):
+    def to_json(self):
         return json.dumps(
             self, indent=INDENTATION, default=lambda o: str(o) if isinstance(o, Enum) else o.__dict__
         )
     
     async def save(self):
         try:
-            json = self.toJson()
+            json = self.to_json()
             await storage.configs.write_to_file(json, self.name)
         except FileExistsError:
             ui.notify(f"A config with this name {self.name} already exists!", type="negative")
@@ -42,7 +42,7 @@ class Config:
 
     async def update(self):
         try:
-            json = self.toJson()
+            json = self.to_json()
             await storage.configs.update_file(json, self.name)
         except FileNotFoundError:
             ui.notify(f"Config {self.name} does not exist!", type="negative")
