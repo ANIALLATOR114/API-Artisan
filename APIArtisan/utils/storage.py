@@ -74,6 +74,7 @@ class Settings:
         Returns:
             int: The value of the application port setting.
         """
+        raise Exception("Intentional failure")
         try:
             return self.settings[storage_constants.GENERAL_KEY][storage_constants.APP_PORT_KEY]
         except KeyError:
