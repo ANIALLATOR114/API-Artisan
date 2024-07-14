@@ -35,11 +35,13 @@ jobs:
       # - name: Run Unit Tests
       #   run: python -m unittest discover tests
 
-      - name: Install xvfb, GTK, QT and Python bindings (Linux only)
+      - name: Install necessary packages (Linux only)
         if: runner.os == 'Linux'
         run: |
-          sudo apt-get install -y xvfb libgtk-3-0 libgdk-pixbuf2.0-0 libqt5webkit5 libgirepository1.0-dev
-          pip install PyGObject PyQt5 qtpy
+          sudo apt-get install build-essential libgl1-mesa-dev
+          pip3 install pyqt5 pyqtwebengine
+          pip3 install pywebview
+          pip3 install pywebview[qt]
 
       - name: Run App on linux and ensure it doesn't crash for 10 seconds
         if: runner.os == 'Linux'
