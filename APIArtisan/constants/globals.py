@@ -1,0 +1,6 @@
+APP_PORT = 9999
+APP_TITLE = "API Artisan"
+APP_FAVICON = "🚀"
+APP_SHOW_WELCOME_MESSAGE = False
+
+APP_DEBUG = True

@@ -3,6 +3,7 @@ from enum import Enum
 
 from nicegui import ui
 from ..utils import storage
+from ..constants import storage_constants
 
 
 class Secret:
@@ -15,7 +16,7 @@ class Secret:
     def to_json(self):
         return json.dumps(
             self,
-            indent=storage.INDENTATION,
+            indent=storage_constants.INDENTATION,
             default=lambda o: str(o) if isinstance(o, Enum) else o.__dict__,
         )
 

@@ -1,0 +1,47 @@
+name: Run tests
+
+on:
+  pull_request:
+    branches: ["*"]
+    types:
+      - opened
+      - synchronize
+  push:
+    branches:
+      - main
+
+jobs:
+  Run_Tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.10.11
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # - name: Run Unit Tests
+      #   run: python -m unittest discover tests
+
+      - name: Install xvfb
+        run: sudo apt-get install -y xvfb
+
+      - name: Run App and ensure it doesn't crash for 10 seconds
+        run: |
+          xvfb-run -a python -m APIArtisan.main &
+          APP_PID=$!
+          sleep 10
+          if kill -0 $APP_PID > /dev/null 2>&1; then
+            echo "App is still running after 10 seconds."
+          else
+            echo "App has crashed within 10 seconds."
+            exit 1
+          fi

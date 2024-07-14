@@ -5,7 +5,7 @@ from ..utils import storage
 
 from .auth_type import AuthType
 from .http_config import HTTPConfig
-from ..utils.storage import INDENTATION
+from ..constants import storage_constants
 
 
 class Config:
@@ -25,7 +25,7 @@ class Config:
 
     def to_json(self):
         return json.dumps(
-            self, indent=INDENTATION, default=lambda o: str(o) if isinstance(o, Enum) else o.__dict__
+            self, indent=storage_constants.INDENTATION, default=lambda o: str(o) if isinstance(o, Enum) else o.__dict__
         )
     
     async def save(self):

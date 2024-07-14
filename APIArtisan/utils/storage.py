@@ -1,41 +1,28 @@
 import os
 import json
-from typing import TYPE_CHECKING
 import aiofiles
 import aiofiles.os
 
-from ..models.display_mode import DisplayMode
-
-if TYPE_CHECKING:
-    from APIArtisan.models.secret import Secret
-    from APIArtisan.models.config import Config
-
-
-DEFAULT_SETTINGS = {"general": {"dark_mode": DisplayMode.DARK.value}}
-LOCAL_APP_DATA = os.path.expandvars(r"%LOCALAPPDATA%\APIArtisan")
-SETTINGS_JSON = os.path.join(LOCAL_APP_DATA, "settings.json")
-SECRETS_DIR = os.path.join(LOCAL_APP_DATA, "secrets")
-CONFIGS_DIR = os.path.join(LOCAL_APP_DATA, "configs")
-INDENTATION = 2
+from ..constants import storage_constants
 
 
 def create_if_doesnt_exist() -> None:
-    if not os.path.exists(LOCAL_APP_DATA):
-        os.makedirs(LOCAL_APP_DATA)
+    if not os.path.exists(storage_constants.LOCAL_APP_DATA):
+        os.makedirs(storage_constants.LOCAL_APP_DATA)
 
-    if not os.path.exists(SETTINGS_JSON):
-        with open(SETTINGS_JSON, "w") as f:
-            f.write(json.dumps(DEFAULT_SETTINGS, indent=4))
+    if not os.path.exists(storage_constants.SETTINGS_JSON):
+        with open(storage_constants.SETTINGS_JSON, "w") as f:
+            f.write(json.dumps(storage_constants.DEFAULT_SETTINGS, indent=4))
 
-    if not os.path.exists(SECRETS_DIR):
-        os.makedirs(SECRETS_DIR)
+    if not os.path.exists(storage_constants.SECRETS_DIR):
+        os.makedirs(storage_constants.SECRETS_DIR)
 
-    if not os.path.exists(CONFIGS_DIR):
-        os.makedirs(CONFIGS_DIR)
+    if not os.path.exists(storage_constants.CONFIGS_DIR):
+        os.makedirs(storage_constants.CONFIGS_DIR)
 
 
 def load_settings_from_file() -> dict:
-    with open(SETTINGS_JSON, "r") as f:
+    with open(storage_constants.SETTINGS_JSON, "r") as f:
         return json.load(f)
 
 
@@ -143,5 +130,5 @@ class Configs(Storage):
     pass
 
 
-secrets = Secrets(SECRETS_DIR)
-configs = Configs(CONFIGS_DIR)
+secrets = Secrets(storage_constants.SECRETS_DIR)
+configs = Configs(storage_constants.CONFIGS_DIR)
