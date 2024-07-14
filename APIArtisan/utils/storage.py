@@ -63,9 +63,7 @@ class Settings:
             bool: The value of the dark mode setting.
         """
         try:
-            return self.settings[storage_constants.GENERAL_KEY][
-                storage_constants.DARK_MODE_KEY
-            ]
+            return self.settings[storage_constants.GENERAL_KEY][storage_constants.DARK_MODE_KEY]
         except KeyError:
             return storage_constants.DARK_MODE_DEFAULT
 
