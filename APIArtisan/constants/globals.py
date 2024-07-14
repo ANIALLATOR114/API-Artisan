@@ -1,6 +1,12 @@
-APP_PORT = 9999
+
+
+# Ports
+APP_DEFAULT_PORT = 9999
+
+# App
 APP_TITLE = "API Artisan"
 APP_FAVICON = "🚀"
 APP_SHOW_WELCOME_MESSAGE = False
 
-APP_DEBUG = True
+# Debug
+APP_DEFAULT_DEBUG = False

@@ -1,10 +1,27 @@
 import os
 
 from ..models.display_mode import DisplayMode
+from .globals import APP_DEFAULT_PORT, APP_DEFAULT_DEBUG
 
-DEFAULT_SETTINGS = {"general": {"dark_mode": DisplayMode.DARK.value}}
+# Settings
+GENERAL_KEY = "general"
+DISPLAY_MODE_KEY = "display_mode"
+DISPLAY_MODE_DEFAULT = DisplayMode.DARK.value
+APP_PORT_KEY = "app_port"
+APP_DEBUG_KEY = "app_debug"
+INDENTATION = 2
+
+# Default settings
+DEFAULT_SETTINGS = {
+    GENERAL_KEY: {
+        DISPLAY_MODE_KEY: DisplayMode.DARK.value,
+        APP_PORT_KEY: APP_DEFAULT_PORT,
+        APP_DEBUG_KEY: APP_DEFAULT_DEBUG,
+    }
+}
+
+# Paths
 LOCAL_APP_DATA = os.path.expandvars(r"%LOCALAPPDATA%\APIArtisan")
 SETTINGS_JSON = os.path.join(LOCAL_APP_DATA, "settings.json")
 SECRETS_DIR = os.path.join(LOCAL_APP_DATA, "secrets")
 CONFIGS_DIR = os.path.join(LOCAL_APP_DATA, "configs")
-INDENTATION = 2

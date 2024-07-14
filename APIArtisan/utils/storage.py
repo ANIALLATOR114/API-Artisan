@@ -4,27 +4,55 @@ import aiofiles
 import aiofiles.os
 
 from ..constants import storage_constants
+from ..constants import globals
 
 
 def create_if_doesnt_exist() -> None:
     if not os.path.exists(storage_constants.LOCAL_APP_DATA):
-        os.makedirs(storage_constants.LOCAL_APP_DATA)
+        os.makedirs(storage_constants.LOCAL_APP_DATA, exist_ok=True)
 
     if not os.path.exists(storage_constants.SETTINGS_JSON):
         with open(storage_constants.SETTINGS_JSON, "w") as f:
-            f.write(json.dumps(storage_constants.DEFAULT_SETTINGS, indent=4))
+            f.write(json.dumps(storage_constants.DEFAULT_SETTINGS, indent=storage_constants.INDENTATION))
 
     if not os.path.exists(storage_constants.SECRETS_DIR):
-        os.makedirs(storage_constants.SECRETS_DIR)
+        os.makedirs(storage_constants.SECRETS_DIR, exist_ok=True)
 
     if not os.path.exists(storage_constants.CONFIGS_DIR):
-        os.makedirs(storage_constants.CONFIGS_DIR)
+        os.makedirs(storage_constants.CONFIGS_DIR, exist_ok=True)
 
 
-def load_settings_from_file() -> dict:
-    with open(storage_constants.SETTINGS_JSON, "r") as f:
-        return json.load(f)
+class Settings:
+    def __init__(self):
+        self.settings = self.load_from_file()
 
+    @classmethod
+    def load_from_file(cls) -> dict:
+        with open(storage_constants.SETTINGS_JSON, "r") as f:
+            settings = json.load(f)
+
+        return settings
+    
+    def get_settings(self) -> dict:
+        return self.settings
+    
+    def get_display_mode(self) -> bool:
+        try:
+            return self.settings[storage_constants.GENERAL_KEY][storage_constants.DISPLAY_MODE_KEY]
+        except KeyError:
+            return storage_constants.DISPLAY_MODE_DEFAULT
+    
+    def get_app_port(self) -> int:
+        try:
+            return self.settings[storage_constants.GENERAL_KEY][storage_constants.APP_PORT_KEY]
+        except KeyError:
+            return storage_constants.APP_DEFAULT_PORT
+        
+    def get_app_debug(self) -> bool:
+        try:
+            return self.settings[storage_constants.GENERAL_KEY][storage_constants.APP_DEBUG_KEY]
+        except KeyError:
+            return storage_constants.APP_DEFAULT_DEBUG
 
 class Storage:
     """
