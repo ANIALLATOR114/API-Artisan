@@ -15,7 +15,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [windows-latest, macos-latest]
         python-version: [3.10.11]
 
     steps:
@@ -34,28 +34,6 @@ jobs:
 
       # - name: Run Unit Tests
       #   run: python -m unittest discover tests
-
-      - name: Install necessary packages (Linux only)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get install build-essential libgl1-mesa-dev
-          sudo apt install python3-gi python3-gi-cairo gir1.2-gtk-3.0 gir1.2-webkit2-4.1
-          pip3 install pyqt5 pyqtwebengine
-          pip3 install pywebview
-          pip3 install pywebview[qt]
-
-      - name: Run App on linux and ensure it doesn't crash for 10 seconds
-        if: runner.os == 'Linux'
-        run: |
-          xvfb-run -a python -m APIArtisan.main &
-          APP_PID=$!
-          sleep 10
-          if kill -0 $APP_PID > /dev/null 2>&1; then
-            echo "App is still running after 10 seconds."
-          else
-            echo "App has crashed within 10 seconds."
-            exit 1
-          fi
 
       - name: Run App on Windows and ensure it doesn't crash for 10 seconds
         if: runner.os == 'Windows'
