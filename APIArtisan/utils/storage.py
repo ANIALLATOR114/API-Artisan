@@ -40,45 +40,45 @@ class Storage:
         """
         self.directory = directory
 
-    async def write_to_file(self, json: str, name_of_file:str) -> None:
-            """
-            Write the given JSON string to a file with the specified name.
+    async def write_to_file(self, json: str, name_of_file: str) -> None:
+        """
+        Write the given JSON string to a file with the specified name.
 
-            Args:
-                json (str): The JSON string to write to the file.
-                name_of_file (str): The name of the file to write to.
+        Args:
+            json (str): The JSON string to write to the file.
+            name_of_file (str): The name of the file to write to.
 
-            Raises:
-                FileExistsError: If a file with the same name already exists.
+        Raises:
+            FileExistsError: If a file with the same name already exists.
 
-            Returns:
-                None
-            """
-            file = os.path.join(self.directory, f"{name_of_file}.json")
-            if os.path.exists(file):
-                raise FileExistsError(f"{name_of_file} already exists!")
-            async with aiofiles.open(file, "w") as f:
-                await f.write(json)
+        Returns:
+            None
+        """
+        file = os.path.join(self.directory, f"{name_of_file}.json")
+        if os.path.exists(file):
+            raise FileExistsError(f"{name_of_file} already exists!")
+        async with aiofiles.open(file, "w") as f:
+            await f.write(json)
 
     async def update_file(self, json: str, name_of_file: str) -> None:
-            """
-            Update the contents of a file with the provided JSON data.
+        """
+        Update the contents of a file with the provided JSON data.
 
-            Args:
-                json (str): The JSON data to write to the file.
-                name_of_file (str): The name of the file to update.
+        Args:
+            json (str): The JSON data to write to the file.
+            name_of_file (str): The name of the file to update.
 
-            Raises:
-                FileNotFoundError: If the specified file does not exist.
+        Raises:
+            FileNotFoundError: If the specified file does not exist.
 
-            Returns:
-                None
-            """
-            file = os.path.join(self.directory, f"{name_of_file}.json")
-            if not os.path.exists(file):
-                raise FileNotFoundError(f"{name_of_file} does not exist!")
-            async with aiofiles.open(file, "w") as f:
-                await f.write(json)
+        Returns:
+            None
+        """
+        file = os.path.join(self.directory, f"{name_of_file}.json")
+        if not os.path.exists(file):
+            raise FileNotFoundError(f"{name_of_file} does not exist!")
+        async with aiofiles.open(file, "w") as f:
+            await f.write(json)
 
     async def delete_file(self, name: str) -> None:
         """

@@ -32,7 +32,9 @@ def build_configs_list(main_body: ui.card):
 
     with ui.list().classes("w-full"):
         if len(configs) == 0:
-            ui.markdown("You don't have any configurations yet, create one using the button above!")
+            ui.markdown(
+                "You don't have any configurations yet, create one using the button above!"
+            )
         for config in configs:
             delete_config = partial(delete_config_func, config, main_body)
             view_config = partial(generate_main_config_page, config, main_body)

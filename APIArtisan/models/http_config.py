@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class HttpMethod(Enum):
     GET = "GET"
     POST = "POST"
@@ -11,11 +12,13 @@ class HttpMethod(Enum):
     def __str__(self) -> str:
         return self.value
 
+
 DEFAULT_HEADER = {
     "Content-Type": "application/json",
     "Accept": "application/json",
     "User-Agent": "APIArtisan",
 }
+
 
 class HTTPConfig:
     def __init__(
@@ -38,7 +41,7 @@ class HTTPConfig:
         data = data.copy()
         data["method"] = HttpMethod(data.get("method", HttpMethod.GET))
         return cls(**data)
-    
+
     def set_url(self, url: str) -> None:
         self.url = url
 

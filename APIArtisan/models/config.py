@@ -25,9 +25,11 @@ class Config:
 
     def to_json(self):
         return json.dumps(
-            self, indent=storage_constants.INDENTATION, default=lambda o: str(o) if isinstance(o, Enum) else o.__dict__
+            self,
+            indent=storage_constants.INDENTATION,
+            default=lambda o: str(o) if isinstance(o, Enum) else o.__dict__,
         )
-    
+
     async def save(self):
         try:
             json = self.to_json()
