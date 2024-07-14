@@ -38,8 +38,7 @@ jobs:
       - name: Install xvfb, GTK, QT and Python bindings (Linux only)
         if: runner.os == 'Linux'
         run: |
-          sudo apt-get update
-          sudo apt-get install -y xvfb libgtk-3-0 libgdk-pixbuf2.0-0 libqt5webkit5
+          sudo apt-get install -y xvfb libgtk-3-0 libgdk-pixbuf2.0-0 libqt5webkit5 libgirepository1.0-dev
           pip install PyGObject PyQt5
 
       - name: Run App on linux and ensure it doesn't crash for 10 seconds
