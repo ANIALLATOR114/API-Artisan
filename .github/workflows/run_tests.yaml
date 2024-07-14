@@ -1,0 +1,63 @@
+name: Run tests
+
+on:
+  pull_request:
+    branches: ["*"]
+    types:
+      - opened
+      - synchronize
+  push:
+    branches:
+      - main
+
+jobs:
+  Run_Tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+        python-version: [3.10.11]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.10.11
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # - name: Run Unit Tests
+      #   run: python -m unittest discover tests
+
+      - name: Run App on Windows and ensure it doesn't crash for 10 seconds
+        if: runner.os == 'Windows'
+        run: |
+          Start-Process -NoNewWindow -FilePath python -ArgumentList "-m APIArtisan.main"
+          $APP_PID = Get-Process -Name python | Select-Object -ExpandProperty Id
+          Start-Sleep -Seconds 10
+          if (Get-Process -Id $APP_PID -ErrorAction SilentlyContinue) {
+          Write-Output "App is still running after 10 seconds."
+          } else {
+          Write-Output "App has crashed within 10 seconds."
+          exit 1
+          }
+        shell: pwsh
+
+      - name: Run App on MacOS and ensure it doesn't crash for 10 seconds
+        if: runner.os == 'MacOS'
+        run: |
+          python -m APIArtisan.main &
+          APP_PID=$!
+          sleep 10
+          if kill -0 $APP_PID > /dev/null 2>&1; then
+            echo "App is still running after 10 seconds."
+          else
+            echo "App has crashed within 10 seconds."
+            exit 1
+          fi

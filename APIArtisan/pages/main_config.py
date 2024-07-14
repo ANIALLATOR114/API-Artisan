@@ -79,10 +79,14 @@ def build_auth_details(config: Config):
                 client_secret_input = ui.input(
                     "Client Secret",
                     value=config.auth_details.get("client_secret", ""),
-                    on_change=lambda value: config.set_auth_details({"client_secret": value.value}),
+                    on_change=lambda value: config.set_auth_details(
+                        {"client_secret": value.value}
+                    ),
                     password=True,
                 )
-                build_secret_dropdown(enabled_secrets, config, "client_secret", client_secret_input)
+                build_secret_dropdown(
+                    enabled_secrets, config, "client_secret", client_secret_input
+                )
         case AuthType.NONE:
             pass
 
@@ -129,17 +133,17 @@ def generate_main_config_page(config: Config, main_body: ui.card):
             ui.markdown("##### HTTP Configuration")
             with ui.row():
                 with ui.card_section():
+                    ui.label("HTTP Method")
+                    ui.select(
+                        ["GET", "POST", "PUT", "DELETE", "PATCH"],
+                        value=config.http_config.method.value,
+                        on_change=lambda value: config.http_config.set_method(value.value),
+                    )
+                with ui.card_section():
                     ui.label("Endpoint URL")
                     ui.input(
                         value=config.http_config.url,
                         on_change=lambda value: config.http_config.set_url(value.value),
-                    )
-                with ui.card_section():
-                    ui.label("HTTP Method")
-                    ui.select(
-                        ["GET", "POST", "PUT", "DELETE", "PATCH"], 
-                        value=config.http_config.method.value,
-                        on_change=lambda value: config.http_config.set_method(value.value),
                     )
 
             with ui.card_section():
@@ -191,6 +195,9 @@ def generate_main_config_page(config: Config, main_body: ui.card):
         ui.separator()
         with ui.card():
             ui.markdown("##### Variable Substitution")
+            ui.markdown(
+                "Variables will be searched for in the body, headers, and URL in the format: `{{variable_name}}`\n\nExample URL with a variable  `https://api.example.com/users/{{user_id}}`"
+            )
 
             with ui.row():
                 with ui.card_section():
