@@ -1,5 +1,3 @@
-
-
 # Ports
 APP_DEFAULT_PORT = 9999
 

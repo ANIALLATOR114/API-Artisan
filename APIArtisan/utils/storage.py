@@ -13,7 +13,11 @@ def create_if_doesnt_exist() -> None:
 
     if not os.path.exists(storage_constants.SETTINGS_JSON):
         with open(storage_constants.SETTINGS_JSON, "w") as f:
-            f.write(json.dumps(storage_constants.DEFAULT_SETTINGS, indent=storage_constants.INDENTATION))
+            f.write(
+                json.dumps(
+                    storage_constants.DEFAULT_SETTINGS, indent=storage_constants.INDENTATION
+                )
+            )
 
     if not os.path.exists(storage_constants.SECRETS_DIR):
         os.makedirs(storage_constants.SECRETS_DIR, exist_ok=True)
@@ -32,27 +36,30 @@ class Settings:
             settings = json.load(f)
 
         return settings
-    
+
     def get_settings(self) -> dict:
         return self.settings
-    
+
     def get_display_mode(self) -> bool:
         try:
-            return self.settings[storage_constants.GENERAL_KEY][storage_constants.DISPLAY_MODE_KEY]
+            return self.settings[storage_constants.GENERAL_KEY][
+                storage_constants.DISPLAY_MODE_KEY
+            ]
         except KeyError:
             return storage_constants.DISPLAY_MODE_DEFAULT
-    
+
     def get_app_port(self) -> int:
         try:
             return self.settings[storage_constants.GENERAL_KEY][storage_constants.APP_PORT_KEY]
         except KeyError:
             return storage_constants.APP_DEFAULT_PORT
-        
+
     def get_app_debug(self) -> bool:
         try:
             return self.settings[storage_constants.GENERAL_KEY][storage_constants.APP_DEBUG_KEY]
         except KeyError:
             return storage_constants.APP_DEFAULT_DEBUG
+
 
 class Storage:
     """
