@@ -4,7 +4,6 @@ import aiofiles
 import aiofiles.os
 
 from ..constants import storage_constants
-from ..constants import globals
 
 
 def create_if_doesnt_exist() -> None:
@@ -27,34 +26,68 @@ def create_if_doesnt_exist() -> None:
 
 
 class Settings:
+    """
+    A class that represents the settings of the application.
+    """
+
     def __init__(self):
         self.settings = self.load_from_file()
 
     @classmethod
     def load_from_file(cls) -> dict:
+        """
+        Load the settings from a file and return them as a dictionary.
+
+        Returns:
+            dict: The settings loaded from the file.
+        """
         with open(storage_constants.SETTINGS_JSON, "r") as f:
             settings = json.load(f)
 
         return settings
 
     def get_settings(self) -> dict:
+        """
+        Get the settings as a dictionary.
+
+        Returns:
+            dict: The settings.
+        """
         return self.settings
 
-    def get_display_mode(self) -> bool:
+    def get_dark_mode(self) -> bool:
+        """
+        Get the value of the dark mode setting.
+
+        Returns:
+            bool: The value of the dark mode setting.
+        """
         try:
             return self.settings[storage_constants.GENERAL_KEY][
-                storage_constants.DISPLAY_MODE_KEY
+                storage_constants.DARK_MODE_KEY
             ]
         except KeyError:
-            return storage_constants.DISPLAY_MODE_DEFAULT
+            return storage_constants.DARK_MODE_DEFAULT
 
     def get_app_port(self) -> int:
+        """
+        Get the value of the application port setting.
+
+        Returns:
+            int: The value of the application port setting.
+        """
         try:
             return self.settings[storage_constants.GENERAL_KEY][storage_constants.APP_PORT_KEY]
         except KeyError:
             return storage_constants.APP_DEFAULT_PORT
 
     def get_app_debug(self) -> bool:
+        """
+        Get the value of the application debug setting.
+
+        Returns:
+            bool: The value of the application debug setting.
+        """
         try:
             return self.settings[storage_constants.GENERAL_KEY][storage_constants.APP_DEBUG_KEY]
         except KeyError:
