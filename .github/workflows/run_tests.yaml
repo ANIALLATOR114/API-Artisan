@@ -35,9 +35,12 @@ jobs:
       # - name: Run Unit Tests
       #   run: python -m unittest discover tests
 
-      - name: Install xvfb (Linux only)
+      - name: Install xvfb, GTK, QT and Python bindings (Linux only)
         if: runner.os == 'Linux'
-        run: sudo apt-get install -y xvfb
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libgtk-3-0 libgdk-pixbuf2.0-0 libqt5webkit5
+          pip install PyGObject PyQt5
 
       - name: Run App on linux and ensure it doesn't crash for 10 seconds
         if: runner.os == 'Linux'
@@ -55,15 +58,16 @@ jobs:
       - name: Run App on Windows and ensure it doesn't crash for 10 seconds
         if: runner.os == 'Windows'
         run: |
-          python -m APIArtisan.main &
-          APP_PID=$!
-          sleep 10
-          if kill -0 $APP_PID > /dev/null 2>&1; then
-            echo "App is still running after 10 seconds."
-          else
-            echo "App has crashed within 10 seconds."
-            exit 1
-          fi
+          Start-Process -NoNewWindow -FilePath python -ArgumentList "-m APIArtisan.main"
+          $APP_PID = Get-Process -Name python | Select-Object -ExpandProperty Id
+          Start-Sleep -Seconds 10
+          if (Get-Process -Id $APP_PID -ErrorAction SilentlyContinue) {
+          Write-Output "App is still running after 10 seconds."
+          } else {
+          Write-Output "App has crashed within 10 seconds."
+          exit 1
+          }
+        shell: pwsh
 
       - name: Run App on MacOS and ensure it doesn't crash for 10 seconds
         if: runner.os == 'MacOS'
